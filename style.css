@@ -403,6 +403,7 @@ header ul a{
     right:0;
     background-color:rgb(255, 255, 255);
     border:1px solid rgb(177, 103, 103);
+    border-radius: 1rem;
     min-height:50vh;
 }
 #cart h2{
@@ -445,4 +446,8 @@ header ul a{
     border:1px solid rgb(121, 117, 117);
     border-radius:7px;
     padding:5px;
+}
+.cancel:hover{
+    background-color: rgb(121, 117, 117);
+    color: white;
 }
