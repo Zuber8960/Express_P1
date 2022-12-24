@@ -1,22 +1,36 @@
+
 const cart_items = document.querySelector('#cart .cart-items');
 let total_cart_price = document.querySelector('#total-value').innerText;
+const marchent = document.querySelector('#merch-content');
+const parentContainer = document.getElementById('EcommerceContainer');
+const backendApis = "http://localhost:4000";
+const pagination = document.querySelector('.pagination');
 
 window.addEventListener('DOMContentLoaded', async () => {
     try {
-        let responce = await axios.get("http://localhost:4000/products")
-        if (responce.request.status === 200) {
-            responce.data.forEach(element => {
-                // console.log(element.id, element.title, element.price);
-                showProductOnScreen(element);
-            });
-        }
+        // const objUrlParams = new URLSearchParams(window.location.search);
+        // const page = objUrlParams.get("page") || 1;
+        const page = 1;
+        let responce = await axios.get(`${backendApis}/products?page=${page}`);
+        // console.log("hi", responce.data);
+        await responce.data.products.forEach(ele => {
+            showProductOnScreen(ele);
+        });
+        showPagination(responce.data);
+
+        // let responce = await axios.get("http://localhost:4000/products")
+        // if (responce.request.status === 200) {
+        //     responce.data.forEach(element => {
+        //         // console.log(element.id, element.title, element.price);
+        //         showProductOnScreen(element);
+        //     })
+        // }
     } catch (err) {
         console.log(err);
     }
 });
 
 
-const marchent = document.querySelector('#merch-content');
 showProductOnScreen = (obj) => {
     const parentDiv = document.createElement('div');
 
@@ -27,14 +41,14 @@ showProductOnScreen = (obj) => {
             <img class="prod-images" src="${obj.imageUrl}" alt="">
         </div>
         <div class="prod-details">
-            <span>$<span>${obj.price}</span></span>
+            <span class="priceClass">$<span>${obj.price}</span></span>
             <button class="shop-item-button" type='button'>ADD TO CART</button>
         </div>`
 
     marchent.appendChild(parentDiv);
 }
 
-const parentContainer = document.getElementById('EcommerceContainer');
+
 parentContainer.addEventListener('click', (e) => {
 
     //for clicking cart to show the products in cart and on click cancel will invisible.
@@ -79,7 +93,6 @@ parentContainer.addEventListener('click', (e) => {
                     } else {
                         console.log('new product is added to cart');
                         let newId = id.split("-")[1];
-                        newId = `in-cart-${newId}`;
                         addNewProductInCart(newId, name, price, img_src, 1);
                         document.querySelector('.cart-number').innerText++;
                     }
@@ -167,6 +180,57 @@ function addNewProductInCart(id, title, price, imageUrl, quantity) {
     cart_items.appendChild(cart_item);
 }
 
+function showPagination({
+    currentPage,
+    hasNextPage,
+    nextPage,
+    hasPreviousPage,
+    previousPage,
+    lastPage
+}) {
+    pagination.innerHTML = "";
+
+    if (hasPreviousPage) {
+        const btn2 = document.createElement('button');
+        btn2.innerHTML = previousPage;
+        btn2.classList.add('btn');
+        btn2.addEventListener('click', () => {
+            marchent.innerHTML = "";
+            getProducts(previousPage);
+        });
+        pagination.appendChild(btn2);
+    }
+    const btn1 = document.createElement('button');
+    btn1.classList.add('btn');
+    btn1.innerHTML = `<h3>${currentPage}</h3>`;
+    btn1.addEventListener('click', () => {
+        marchent.innerHTML = "";
+        getProducts(currentPage);
+    });
+    pagination.appendChild(btn1);
+
+    if (hasNextPage) {
+        const btn3 = document.createElement('button');
+        btn3.innerHTML = nextPage;
+        btn3.classList.add('btn');
+        btn3.addEventListener('click', () => {
+            marchent.innerHTML = "";
+            getProducts(nextPage);
+        });
+        pagination.appendChild(btn3);
+    }
+}
+
+function getProducts(page) {
+    axios.get(`${backendApis}/products?page=${page}`)
+        .then(responce => {
+            responce.data.products.forEach(ele => {
+                showProductOnScreen(ele);
+            })
+            showPagination(responce.data);
+        })
+        .catch(err => console.log(err))
+}
 
 
 function notifyOnScreen(massage) {
