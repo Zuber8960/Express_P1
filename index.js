@@ -114,21 +114,49 @@ parentContainer.addEventListener('click', (e) => {
             alert('You have Nothing in Cart , Add some products to purchase !');
             return;
         }
-        alert('Thanks for the purchase')
-        cart_items.innerHTML = ""
-        document.querySelector('.cart-number').innerText = 0;
-        document.querySelector('#total-value').innerText = `0.00`;
+
+        axios.post(`${backendApis}/orders`)
+            .then(responce => {
+                console.log(responce);
+                if (responce.request.status === 200) {
+                    let orderId = responce.data.orderId;
+                    alert(`Congratulations !!! 😊😊👍 \n Your order is placed successfully. \n Your Order ID: ${orderId}`)
+                    // notifyOnScreen();
+                    cart_items.innerHTML = ""
+                    document.querySelector('.cart-number').innerText = 0;
+                    document.querySelector('#total-value').innerText = `0.00`;
+                }else{
+                    alert(responce.data.message);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+
+            });
+
+        // alert('Thanks for the purchase')
+
     }
 
     //for remove button functionality.
     if (e.target.innerText == 'REMOVE') {
-        let productId = e.target.parentNode.parentNode.id;
-        let qId = productId.split("-")[2];
-        // let total_cart_price = document.querySelector('#total-value').innerText;
-        total_cart_price = parseFloat(total_cart_price).toFixed(2) - (parseFloat(document.querySelector(`#${productId} .cart-price`).innerText) * parseFloat(document.getElementById(`quantity-${qId}`).value)).toFixed(2);
-        document.querySelector('.cart-number').innerText = parseInt(document.querySelector('.cart-number').innerText) - 1
-        document.querySelector('#total-value').innerText = `${total_cart_price.toFixed(2)}`
-        e.target.parentNode.parentNode.remove()
+        if (confirm('Are you sure ?')) {
+            let productId = e.target.parentNode.parentNode.id;
+            let qId = productId.split("-")[2];
+            //deleting product from server.
+            axios.post(`${backendApis}/cart-delete-item`, { productId: qId })
+                .then(res => {
+                    if (res.request.status === 200) {
+                        console.log(res.data);
+                        notifyOnScreen(res.data.message);
+                        // let total_cart_price = document.querySelector('#total-value').innerText;
+                        total_cart_price = parseFloat(total_cart_price).toFixed(2) - (parseFloat(document.querySelector(`#${productId} .cart-price`).innerText) * parseFloat(document.getElementById(`quantity-${qId}`).value)).toFixed(2);
+                        document.querySelector('.cart-number').innerText = parseInt(document.querySelector('.cart-number').innerText) - 1
+                        document.querySelector('#total-value').innerText = `${total_cart_price.toFixed(2)}`
+                        e.target.parentNode.parentNode.remove()
+                    }
+                });
+        }
     }
 
 })
@@ -240,5 +268,5 @@ function notifyOnScreen(massage) {
     container.appendChild(notification);
     setTimeout(() => {
         notification.remove();
-    }, 3000)
+    }, 2500)
 }
