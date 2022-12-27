@@ -480,11 +480,70 @@ header ul a{
 .priceClass:hover{
     background-color: #00695c;
     color: white;
-    transform: scale(1.2);
+    transform: scale(1.5);
 }
-/* h1:hover{
+
+#orders .order-item{
+    display:flex;
+    border-bottom:1px solid black;
+    padding:10px;
+}
+#orders .order-item .order-id{
+    width:12%;
+}
+#orders .order-item .orderId{
+    width:12%;
+    font-weight: 800;
+    padding-left: 10px;
+}
+#orders .order-item .product{
+    width:20%;
+}
+#orders .order-item .productDetails{
+    width:20%;
+    font-weight: 800;
+    padding-left: 5px;
+}
+#orders .order-item .order-btn{
+    width:30%;
+    background: #56CCF2;
+    color:white;
+    border:none;
+    padding:7px;
+    border-radius:5px;
+    text-align: center;
+    font-weight:700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.containers{
+    max-width:1100px;
+    margin:0 auto;
+    padding:20px 30px;
+}
+#orders .order-item .order-btn:hover{
+    background-color: #d62c2c;
+    font-weight: 1100px ;
+}
+#orders .order-item .productDetails:hover,
+#orders .order-item .orderId:hover{
+    color: rgb(117, 14, 54);
+    transform: scale(1.1);
+}
+#orders .order-item:hover{
     transform: scale(1.2);
-    color: #00695c;
-    background-color: white;
+    background-color: #50c223;
     cursor: pointer;
-} */
+}
+header #order-collection{
+    display:block;
+    border:1px solid #56CCF2;
+    padding:15px 30px;
+    font-size:23px;
+    font-weight: 200;
+    margin:10px auto;
+    background: inherit;
+    cursor: pointer;
+    color:white;
+}
+
+

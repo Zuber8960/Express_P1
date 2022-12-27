@@ -125,7 +125,7 @@ parentContainer.addEventListener('click', (e) => {
                     cart_items.innerHTML = ""
                     document.querySelector('.cart-number').innerText = 0;
                     document.querySelector('#total-value').innerText = `0.00`;
-                }else{
+                } else {
                     alert(responce.data.message);
                 }
             })
@@ -218,6 +218,21 @@ function showPagination({
 }) {
     pagination.innerHTML = "";
 
+    if (currentPage != 1 && previousPage != 1) {
+        const btn4 = document.createElement('button');
+        btn4.classList.add('btn');
+        btn4.innerHTML = 1;
+        btn4.addEventListener('click', () => {
+            marchent.innerHTML = "";
+            getProducts(1);
+        });
+        let span = document.createElement('span');
+        span.innerText = `........`
+        
+        pagination.appendChild(btn4);
+        pagination.appendChild(span);
+    }
+
     if (hasPreviousPage) {
         const btn2 = document.createElement('button');
         btn2.innerHTML = previousPage;
@@ -246,6 +261,20 @@ function showPagination({
             getProducts(nextPage);
         });
         pagination.appendChild(btn3);
+    }
+
+    if (currentPage != lastPage && nextPage!=lastPage) {
+        const btn4 = document.createElement('button');
+        btn4.classList.add('btn');
+        btn4.innerHTML = lastPage;
+        btn4.addEventListener('click', () => {
+            marchent.innerHTML = "";
+            getProducts(lastPage);
+        });
+        let span = document.createElement('span');
+        span.innerText = `........`
+        pagination.appendChild(span);
+        pagination.appendChild(btn4);
     }
 }
 
